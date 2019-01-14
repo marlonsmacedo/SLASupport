@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load render_table from django_tables2 %}
+{% load static %}
+{% load materializecss %}
+
+{% block jshead %}
+{% comment %} //jquery CND 3.3.1 {% endcomment %}
+<script src="https://code.jquery.com/jquery-3.3.1.js"
+        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
+        crossorigin="anonymous">
+ </script>
+
+<script>
+$(document).ready(function() {
+    $( "#tabDivForm" ).hide()
+});
+</script>
+
+{% comment %} ELEMENTARY JQUERY PARA ATIVAR O <select> {% endcomment %}
+    <script>
+        
+        $(document).ready(function () {
+            $('select').formSelect();
+        });
+    </script>
+
+    <script>
+        $.ajax({
+            url: "{% url 'ajax_content_details' %}",
+            dataType: "json",
+            success: function (data) {
+                $.each(data, function (key, value) {
+                    $('#id_area')
+                        .append($("<option></option>")
+                            .attr('value', value.pk)
+                            .text(value.fields.desc_area));
+                });
+            }
+        });
+    </script>
+
+    {% endblock jshead %}
+
+    {% block content %}
+
+    <div class="row card-panel">
+        <div class="input-field col s6">
+            <input disabled placeholder="{{ user.first_name|upper }} {{ user.last_name|upper }}" id="full_name" type="text"
+                class="validate">
+            <label for="full_name">USUARIO</label>
+        </div>
+        <div class="input-field col s6">
+            <input disabled placeholder="FILIAL 11 - TIJUCA/RJ" id="local_name" type="text" class="validate">
+            <label for="local_name">FILIAL ATENDIMENTO</label>
+        </div>
+    </div>
+    <form class="row card-panel" method="post" action="{% url 'save' %}" id="chamadoForm">
+        {% csrf_token %}
+        <div class="input-field col s6">
+            <select name="area" id="id_area">
+                <option value="">----------</option>
+            </select>
+            <label for="id_area">AREA</label>
+        </div>
+
+        <div class="input-field col s6">
+            <select name="problema" id="id_problema">
+                <option value="">----------</option>
+            </select>
+            <label for="id_problema">PROBLEMA</label>
+        </div>
+        <div id="tabDivForm" class="row">
+            <div class="col s12">
+                <table id="tab_cat_problemas" class="responsive-table highlight">
+                    <thead>
+                        <tr>
+                            <th class="center">PROBLEMA</th>
+                            <th class="center">TIPO MANUTENÇÃO</th>
+                            <th class="center">SLA</th>
+                            <th class="center">ORIGEM</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                       
+                    </tbody>
+                </table>
+            </div>
+        </div>
+         <div class="input-field col s3">
+            <input placeholder="Insira o Contato" id="contato" type="text" class="validate">
+            <label for="contato">Contato</label>
+        </div>
+        <div class="input-field col s3">
+                <input placeholder="Ramal" id="contato" type="text" class="validate">
+                <label for="contato">Ramal</label>
+            </div>
+         <div class="input-field col s3">
+            {{ form.unidade }}
+            {{ form.unidade.label_tag }}
+             <!-- <input placeholder="Insira a Unidade para atendimento" id="local" type="text" class="validate">
+            <label for="Local">UNIDADE</label> -->
+        </div>
+        <div class="input-field col s3">
+            
+            {{ form.local|title }}
+            {{ form.local.label_tag }}
+             <!-- <input placeholder="Insira o Setor da Unidade" id="setoro" type="text" class="validate">
+            <label for="setor">SETOR</label> -->
+        </div>
+        <div class="input-field col s12">
+            {{ form.desc_problema|materializecss }}
+        </div>
+            
+        <button class="btn waves-effect waves-light right" type="submit" name="action">Salvar
+            <i class="material-icons right">send</i>
+        </button>
+        
+    </form>
+    {% endblock content %}
+
+
+{% block extra_js %}
+<script>
+$("#id_area").change(function () {
+    var areaId = $(this).val();
+    $('#id_problema').formSelect().empty();
+    $.ajax({
+        url: "{% url 'ajax_content_details' %}",
+        data: {
+            'problema': areaId
+        },
+        success: function (data) {
+            $(document).ready(function () {
+                $('#id_problema').formSelect();
+            });
+            $('#id_problema').append('<option value="0" selected="selected">----------</option>');
+            $.each(data, function (i, val) {
+                $('#id_problema')
+                    .append($("<option></option>")
+                        .attr("value", val.pk)
+                        .text(val.fields.desc_problema));
+            });
+        }
+    });
+});
+
+$("#id_problema").change(function () {
+    var problemaId = $(this).val();
+    $(document).ready(function () {
+        $('#tabDivForm').show();
+        $('#tab_cat_problemas tbody').empty();
+    });
+    $.ajax({
+        url: "{% url 'ajax_content_details' %}",
+        data: {
+            'cat_problema': problemaId
+        },
+        success: function (data) {
+                        console.log(data);
+
+            data.forEach(function(val) {
+                $('#tab_cat_problemas').append(
+                    '<tr>'+
+                    '<td class="center active">'+
+                        '<p><label class="black-text">' +
+                            '<input name="group1" type="radio"/><span>' + val.problema__desc_problema + '</span>'+
+                        '</label></p>'+
+                    '</td>' +
+                    '<td class="center">' + val.desc_categoria_problema + '</td>' +
+                    '<td class="center">' + val.sla + '</td>' +
+                    '<td class="center">' + val.tipo_manutencao + '</td></tr>');
+            });
+        }
+    });
+});
+</script>
+{% endblock extra_js %}
