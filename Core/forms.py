@@ -11,7 +11,17 @@ class ChamadoForm(ModelForm):
     class Meta:
 
         model = Chamado
-        fields = '__all__'
+        fields = [
+            'area',
+            'problema',
+            'categoria_problema',
+            'criador',
+            'ramal',
+            'unidade',
+            'ramal',
+            'desc_problema',
+            'status_chamado'
+        ]
         widgets = {
             'categoria_problema': RadioSelect()
         }        

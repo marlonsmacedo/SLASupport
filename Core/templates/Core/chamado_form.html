@@ -53,15 +53,31 @@ $(document).ready(function () {
             <label for="local_name">FILIAL ATENDIMENTO</label>
         </div>
     </div>
-    <form class="row card-panel" method="post" action="" id="chamadoForm">
+    <form class="row card-panel" method="post" id="chamadoForm">
         {% csrf_token %}
-        {{ form }}
-        <button class="btn waves-effect waves-light red" type="submit" name="action">Cancelar</button>
-        <button href="{% url 'home' %}" class="btn waves-effect waves-light light-blue right" type="submit" name="action">Salvar
-            <i class="material-icons right">send</i>
-          </button>
+        <div class="input-field col s1 m6 l6">
+            {{ form.area }}
+            {{ form.area.label_tag }}
+        </div>
+        <div class="input-field col s1 m6 l6">
+            {{ form.problema }}
+            {{ form.problema.label_tag }}
+        </div>
+        <div id="tabDivForm" class="input-field col s1 m12 l12">
+            {{ form.categoria_problema }}
+        </div>
+        <div id="tabDivForm" class="input-field col s1 m12 l12">
+            {{ form.desc_problema|materializecss }}
+        </div>
+        <div class="col s12">
+            <button href="{% url 'home' %}" class="btn waves-effect waves-light red">Cancelar</button>
+            <button class="btn waves-effect waves-light light-blue right" type="submit"  value="save">
+                Salvar
+                <i class="material-icons right">send</i>
+            </button>
+        </div>
     </form>
-    {% endblock content %}
+{% endblock content %}
 
 
 {% block extra_js %}
@@ -88,7 +104,7 @@ $('#id_area').change(function () {
  $("#id_problema").change(function () {
     var problemaId = $(this).val();
     $(document).ready(function () {
-        $('#id_categoria_problema').show();
+        $('#tabDivForm').show();
         $('#tab_categoria_problema tbody').empty();
     });
     $.ajax({
