@@ -5,6 +5,7 @@ HomeListView,
 ChamadoCreateView,
 ChamadoUpdateView,
 content_details,
+
 )
 
 
@@ -15,7 +16,7 @@ urlpatterns = [
     path('add/', ChamadoCreateView.as_view(), name='chamado_add'),
     path('<int:pk>/', ChamadoUpdateView.as_view(), name='chamado_change'),
     path('content_details/', content_details, name='ajax_content_details'),
-    path('get_data/', content_details, name='save'),
+    
 
     # path('ajax/load-problemas/', load_problemas, name='ajax_load_problemas'),
     # path('ajax/load-cat-problemas/', load_cat_problemas, name='ajax_load_cat_problemas'),

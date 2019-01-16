@@ -1,0 +1,28 @@
+<table class="bordered" id="tab_categoria_problema">
+    <thead>
+        <tr>
+            <th class="center">PROBLEMA</th>
+            <th class="center">TIPO</th>
+            <th class="center">SLA</th>
+            <th class="center">ORIGEM</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for cat_problema in cat_problemas %}
+            <tr>
+                <td class="center">
+                    <p>
+                        <label>
+                            <input name="group{{cat_problema.id}}" type="radio" checked />
+                            <span class="black-text">{{ cat_problema.problema__desc_problema|upper }}</span>
+                        </label>
+                    </p>
+                </td>
+                <td class="center">{{ cat_problema.desc_categoria_problema|upper }}</td>
+                <td class="center">{{ cat_problema.sla|upper }}</td>
+                <td class="center">{{ cat_problema.origem|upper }}</td>
+            </tr>
+        {% endfor %}
+    </tbody>
+</table>
+

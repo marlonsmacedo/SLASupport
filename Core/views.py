@@ -41,37 +41,34 @@ class ChamadoUpdateView(UpdateView):
 
 def content_details(request):
 
-    
     if request.method == 'GET' and 'problema' in request.GET:
-        
+
         area_id = request.GET.get('problema')
         problemas = Problema.objects.filter(area_id=area_id).order_by('desc_problema')
-        problemas_json = serializers.serialize('json', problemas)
-       
-       
-        return HttpResponse(problemas_json, content_type='application/json')
-    
-    elif request.method == 'GET' and 'cat_problema' in request.GET:
-        
-        problema_id = request.GET.get('cat_problema')
-        categoria_problemas = list(Categoria_Problema.objects.filter(problema_id=problema_id).values('problema__desc_problema', 'desc_categoria_problema', 'sla','tipo_manutencao'))
-        print(categoria_problemas)
-        # categoria_problemas_json = serializers.serialize('json', categoria_problemas)
-        # print(categoria_problemas_json)
-        return HttpResponse(json.dumps(categoria_problemas), content_type='application/json')
 
-    else:        
+        return render (request, 'misc/problemas_dropdown_list.html', {'problemas' : problemas})
+
+    elif request.method == 'GET' and 'cat_problema' in request.GET:
+
+        problema_id = request.GET.get('cat_problema')
+        cat_problemas = Categoria_Problema.objects.filter(
+                problema_id=problema_id).values(
+                    'problema__desc_problema',
+                    'desc_categoria_problema',
+                    'sla',
+                    'tipo_manutencao',
+                    'origem'
+                )
+        print(cat_problemas)
+        return render (request, 'misc/cat_problemas_options_list.html', {'cat_problemas' : cat_problemas} )
+
+    else:
         area = Area.objects.all()
         json_area_select = serializers.serialize('json', area)
         return HttpResponse(json_area_select, content_type='application/json')
 
-def get_data(request):
 
-    if request.method == POST or none:
-
-        print("RECEBI")
-
-# def load_problemas(request):
+# def teste_json(request):
 
 #     area_id = request.GET.get('area')
 #     problemas = Problema.objects.filter(area_id=area_id).order_by('desc_problema')
