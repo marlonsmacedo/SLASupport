@@ -15,11 +15,12 @@
 }
 
 .logo-panel {
-
+  width: 100%;
 }
 
-.login-panel {
-
+.login-title {
+  display: block;
+  padding: 0 0 0 70px;
 }
 
 .container {
@@ -27,6 +28,7 @@
   width: 95%;
 
 }
+
 
 td {
  

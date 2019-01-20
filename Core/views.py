@@ -1,15 +1,6 @@
-
-# from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
-# from django.contrib import messages
-# from django.core import serializers
-# import json
-
-# from .models import Area, Problema, Categoria_Problema, Chamado
-# from .forms import CriaChamado
-
-################
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.decorators import login_required
 from django.shortcuts import render
-from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, CreateView, UpdateView
@@ -18,37 +9,52 @@ from .forms import ChamadoForm
 
 
 
-class HomeListView(ListView):
+class HomeListView(LoginRequiredMixin, ListView):
 
     model = Chamado
     context_object_name = 'chamado'
-    paginate_by = 5
+    paginate_by = 15
+    login_url = 'acesso/login/'
+    redirect_field_name = 'redirect_to'
 
 
-class ChamadoCreateView(SuccessMessageMixin, CreateView):
+
+class ChamadoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
     model = Chamado
     form_class = ChamadoForm
     success_url = reverse_lazy('home')
-    success_message = "Chamado was created successfully"
+    success_message = "Ocorrência aberta com Sucesso no Sistema."
+    login_url = 'acesso/login/'
+    redirect_field_name = 'redirect_to'
 
-class ChamadoUpdateView(SuccessMessageMixin, UpdateView):
+    def get_initial(self):
+
+        user = self.request.user
+        initial = {'criador': user}
+        return initial
+
+
+class ChamadoUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     model = Chamado
     form_class = ChamadoForm
+    template_name_suffix = '_update_form'
     success_url = reverse_lazy('home')
     success_message = "Chamado was Updated successfully"
+    login_url = 'acesso/login/'
+    redirect_field_name = 'redirect_to'
 
+
+@login_required
 def content_details(request):
 
     if request.method == 'GET' and 'problema' in request.GET:
-
         area_id = request.GET.get('problema')
         problemas = Problema.objects.filter(area_id=area_id).order_by('desc_problema')
 
         return render (request, 'misc/problemas_dropdown_list.html', {'problemas' : problemas})
 
     elif request.method == 'GET' and 'cat_problema' in request.GET:
-
         problema_id = request.GET.get('cat_problema')
         cat_problemas = Categoria_Problema.objects.filter(
                 problema_id=problema_id).values(

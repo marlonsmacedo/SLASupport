@@ -19,12 +19,9 @@ $(document).ready(function () {
     $('select').formSelect();
 });
 </script>
- {% endblock jshead %}
+{% endblock jshead %}
 
-    {% block content %}
-    
-
-
+{% block content %}
     <div class="row card-panel">
         <div class="input-field col s6">
             <input disabled placeholder="{{ user.first_name|upper }} {{ user.last_name|upper }}" id="full_name" type="text"
@@ -39,13 +36,13 @@ $(document).ready(function () {
     <form class="row card-panel" method="post" action="." id="chamadoForm" novalidate>
         {% csrf_token %}
        
-  {{ form.non_field_errors }}
+        {{ form.non_field_errors }}
 
-  {% for hidden_field in form.hidden_fields %}
-    {{ hidden_field.errors }}
-    {{ hidden_field }}
-  {% endfor %}
- 
+        {% for hidden_field in form.hidden_fields %}
+            {{ hidden_field.errors }}
+            {{ hidden_field }}
+        {% endfor %}
+        
              
             <div class="input-field col s1 m6 l6">
                 <i class="material-icons prefix">people</i>
@@ -114,73 +111,42 @@ $(document).ready(function () {
 
 
 {% block extra_js %}
-<script>
-$('#id_area').change(function () {
+    <script>
+        $('#id_area').change(function () {
 
-    var areaId = $(this).val();
-    $('#id_problema').formSelect().empty();
-    $.ajax({
-        url: "{% url 'ajax_content_details' %}",
-        data: {
-            'problema': areaId
-        },
-        success: function (data) {
+            var areaId = $(this).val();
+            $('#id_problema').formSelect().empty();
+            $.ajax({
+                url: "{% url 'ajax_content_details' %}",
+                data: {
+                    'problema': areaId
+                },
+                success: function (data) {
+                    $(document).ready(function () {
+                        $('#id_problema').formSelect();
+                    });
+                    $('#id_problema').html(data);
+            }
+            });
+        });
+
+        $("#id_problema").change(function () {
+            var problemaId = $(this).val();
             $(document).ready(function () {
-                $('#id_problema').formSelect();
-             });
-             $('#id_problema').html(data);
-       }
-    });
-});
-
- $("#id_problema").change(function () {
-    var problemaId = $(this).val();
-    $(document).ready(function () {
-      $('#tab_cat_problemas').show();
-      $('#tab_cat_problemas').empty();
-    });
-    $.ajax({
-       url: "{% url 'ajax_content_details' %}",
-       data: {
-          'cat_problema': problemaId
-       },
-        success: function (data) {
-            console.log(data)
+            $('#tab_cat_problemas').show();
             $('#tab_cat_problemas').empty();
-            $('#tab_cat_problemas').html(data);
-        }
-    });
-});
-
-// $("#id_problema").change(function () {
-//     var problemaId = $(this).val();
-//     $(document).ready(function () {
-//         $('#tabDivForm').show();
-//         $('#tab_cat_problemas tbody').empty();
-//     });
-//     $.ajax({
-//         url: "{% url 'ajax_content_details' %}",
-//         data: {
-//             'cat_problema': problemaId
-//         },
-//         success: function (data) {
-//                         console.log(data);
-
-//             data.forEach(function(val) {
-//                 $('#tab_cat_problemas').append(
-//                     '<tr>'+
-//                     '<td class="center active">'+
-//                         '<p><label class="black-text">' +
-//                             '<input name="group1" type="radio"/><span>' + val.problema__desc_problema + '</span>'+
-//                         '</label></p>'+
-//                     '</td>' +
-//                     '<td class="center">' + val.desc_categoria_problema + '</td>' +
-//                     '<td class="center">' + val.sla + '</td>' +
-//                     '<td class="center">' + val.tipo_manutencao + '</td></tr>');
-//             });
-//         }
-//     });
-// });
-
-</script>
+            });
+            $.ajax({
+            url: "{% url 'ajax_content_details' %}",
+            data: {
+                'cat_problema': problemaId
+            },
+                success: function (data) {
+                    console.log(data)
+                    $('#tab_cat_problemas').empty();
+                    $('#tab_cat_problemas').html(data);
+                }
+            });
+        });
+    </script>
 {% endblock extra_js %}

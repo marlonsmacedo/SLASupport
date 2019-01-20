@@ -1,13 +1,11 @@
 {% extends 'base.html' %}
 
 {% block jshead %}
-    <script>
-        // Tooltips
-        document.addEventListener('DOMContentLoaded', function () {
-            var elems = document.querySelectorAll('.tooltipped');
-            var instances = M.Tooltipage_obj.init(elems);
-        });
-    </script>
+<script>
+  $(document).ready(function(){
+    $('.tooltipped').tooltip();
+  });
+</script>
 {% endblock jshead %}
 
 {% block content %}
@@ -40,14 +38,14 @@
           <th class="center">PROBLEMA</br>TIPO</th>
           <th class="center">UNIDADE - LOCAL<br>DESCRIÇÃO</th>
           <th class="center">SLA</th>
-          <th class="center"><span style="padding: 80%">AÇÃO</span></th>
+          <th class="center"><span style="padding: 30s%">AÇÃO</span></th>
           <th></th>
           <th></th>
 
         </tr>
       </thead>
       <tbody>
-        {% for chamados in chamado %}
+        {% for chamados in object_list %}
         <tr>
           <td class="center">Nº.: {{ chamados.id }} </br> {{ chamados.area }}</td>
           <td class="center">{{ chamados.criador.first_name }} </br> {{ chamados.ramal }}</td>
@@ -67,9 +65,15 @@
             <i class="material-icons yellow-text text-accent-5">check_circle</i><br>
             {% now "d-m-Y H:i:s" %}
           </td>
-          <td><a href="#" class="blue-grey-text text-darken-3"><i class="material-icons"><span style="padding: 80%">search</span></i></a></td>
-          <td><a href="#" class="blue-grey-text text-darken-3"><i class="material-icons">edit</i></a></td>
-          <td><a href="#" class="blue-grey-text text-darken-3"><i class="material-icons">delete</i></a></td>
+          <td><a href="{% url 'chamado_change' pk=chamados.id %}" class="blue-grey-text text-darken-3">
+                <i class="material-icons tooltipped"  data-tooltip="Editar Ocorrência Nº{{chamados.id}}" >edit</i>
+              </a>
+          </td>
+          <td>
+            <a href="#" class="blue-grey-text text-darken-3">
+              <i class="material-icons tooltipped"  data-tooltip="Encerrar Ocorrência Nº{{chamados.id}}">delete</i>
+              </a>
+          </td>
         </tr>
         {% endfor %}
       </tbody>

@@ -14,7 +14,7 @@ content_details,
 urlpatterns = [
     path('', HomeListView.as_view(), name='home'),
     path('add/', ChamadoCreateView.as_view(), name='chamado_add'),
-    path('<int:pk>/', ChamadoUpdateView.as_view(), name='chamado_change'),
+    path('<int:pk>/update/', ChamadoUpdateView.as_view(), name='chamado_change'),
     path('content_details/', content_details, name='ajax_content_details'),
     
 

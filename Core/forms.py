@@ -27,7 +27,8 @@ class ChamadoForm(ModelForm):
         widgets = {
             'categoria_problema': RadioSelect(attrs={'class': 'center'}),
             'desc_problema': Textarea(attrs={'class': 'materialize-textarea'}),
-        }        
+            'criador': HiddenInput(),
+        }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

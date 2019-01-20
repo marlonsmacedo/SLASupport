@@ -1,7 +1,5 @@
-
 <!DOCTYPE html>
 <html lang="pt-br">
-{% if user.is_authenticated %}
 {% load static %}
 
 <head>
@@ -16,7 +14,11 @@
         integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
         crossorigin="anonymous">
     </script>
-
+    <script>
+        $(document).ready(function(){
+            $('.sidenav').sidenav();
+        });
+    </script>
     {% block jshead %}
     {% endblock jshead %} 
     
@@ -74,6 +76,3 @@
 <script src="{% static 'js/materialize.js' %}"></script>
 </body>
 </html>
-{% else %}
-<script> window.location.replace("http://127.0.0.1:8000/acesso/login"); </script>
-{% endif %}
