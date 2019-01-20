@@ -30,20 +30,13 @@ class ChamadoCreateView(SuccessMessageMixin, CreateView):
     model = Chamado
     form_class = ChamadoForm
     success_url = reverse_lazy('home')
-    success_message = "%(calculated_field)s was created successfully"
-    
-    def get_success_message(self, cleaned_data):
-        return self.success_message % dict(
-            cleaned_data,
-            calculated_field=self.object.calculated_field,
-        )
+    success_message = "Chamado was created successfully"
 
-
-class ChamadoUpdateView(UpdateView):
+class ChamadoUpdateView(SuccessMessageMixin, UpdateView):
     model = Chamado
     form_class = ChamadoForm
     success_url = reverse_lazy('home')
-    success_message = "%(name)s was created successfully"
+    success_message = "Chamado was Updated successfully"
 
 def content_details(request):
 
@@ -59,6 +52,7 @@ def content_details(request):
         problema_id = request.GET.get('cat_problema')
         cat_problemas = Categoria_Problema.objects.filter(
                 problema_id=problema_id).values(
+                    'id',
                     'problema__desc_problema',
                     'desc_categoria_problema',
                     'sla',

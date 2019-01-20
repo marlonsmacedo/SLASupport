@@ -5,15 +5,11 @@
 {% load materializecss %}
 
 {% block jshead %}
-{% comment %} //jquery CND 3.3.1 {% endcomment %}
-<script src="https://code.jquery.com/jquery-3.3.1.js"
-        integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
-        crossorigin="anonymous">
- </script>
+
 
 <script>
 $(document).ready(function() {
-    $( "#tabDivForm" ).hide()
+  $('#tab_cat_problemas').hide()
 });
 </script>
 
@@ -27,17 +23,7 @@ $(document).ready(function () {
 
     {% block content %}
     
-{% if messages %}
-    <ul class="messages">
-        {% for message in messages %}
-        <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
-            {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-            {{ message }}
-        </li>
-        {% endfor %}
-    </ul>
-{% endif %}
-        
+
 
     <div class="row card-panel">
         <div class="input-field col s6">
@@ -50,10 +36,32 @@ $(document).ready(function () {
             <label for="local_name">FILIAL ATENDIMENTO</label>
         </div>
     </div>
-    <form class="row card-panel" method="post" id="chamadoForm" novalidate>
+    <form class="row card-panel" method="post" action="." id="chamadoForm" novalidate>
         {% csrf_token %}
-        {{ form }}
-        {% comment %} <div class="input-field col s1 m6 l6">
+       
+  {{ form.non_field_errors }}
+
+  {% for hidden_field in form.hidden_fields %}
+    {{ hidden_field.errors }}
+    {{ hidden_field }}
+  {% endfor %}
+  {% comment %} <table border="1">
+    {% for field in form.visible_fields %}
+      <tr>
+        <th>{{ field.label_tag }}</th>
+        <td>
+          {{ field.errors }}
+          {{ field }}
+          {{ field.help_text }}
+        </td>
+      </tr>
+    {% endfor %}
+  </table> {% endcomment %}
+            <div class="input-field col s1 m12 l12">
+                {{ form.criador }}
+                <label>CRIADOR</label>
+            </div>
+            <div class="input-field col s1 m6 l6">
                 <i class="material-icons prefix">people</i>
                 {{ form.area }}
                 <label>ÁREA ATENDIMENTO</label>
@@ -63,8 +71,21 @@ $(document).ready(function () {
                 {{ form.problema }}
                 <label>PROBLEMA</label>
             </div>
-            <div id="tabDivForm" class="input-field col s1 m12 l12">
-               {{ form.categoria_problema }}
+            <div id="tab_cat_problemas" class="input-field col s1 m12 l12">
+                <table>
+                    {% for tipo in form.categoria_problema %}
+                            <tr>
+                                <td>
+                                    <p>
+                                        <label for="{{ tipo.id_for_label }}">
+                                                {{ tipo.tag }}
+                                            <span>{{ tipo.choice_label }}</span>
+                                        </label>
+                                    </p>
+                                </td>
+                            </tr>
+                    {% endfor %}
+                </table>
             </div>
             <div  class="input-field col s1 m12 l12">
                 {{ form.desc_problema }}
@@ -95,7 +116,6 @@ $(document).ready(function () {
                 {{ form.status_chamado }}
                 <label >SITUAÇÃO</label>
             </div>
-            {% endcomment %}
         <div class="col s12">
             <a href="{% url 'home' %}" class="waves-effect waves-light btn red">Cancelar</a>
             <button class="btn waves-effect waves-light light-blue right" type="submit"  value="save">
@@ -119,7 +139,6 @@ $('#id_area').change(function () {
             'problema': areaId
         },
         success: function (data) {
-            console.log(data);
             $(document).ready(function () {
                 $('#id_problema').formSelect();
              });
@@ -131,20 +150,22 @@ $('#id_area').change(function () {
  $("#id_problema").change(function () {
     var problemaId = $(this).val();
     $(document).ready(function () {
-        $('#tabDivForm').show();
-        $('#tab_categoria_problema tbody').empty();
+      $('#tab_cat_problemas').show();
+      $('#tab_cat_problemas').empty();
     });
     $.ajax({
        url: "{% url 'ajax_content_details' %}",
        data: {
-           'cat_problema': problemaId
-        },
+          'cat_problema': problemaId
+       },
         success: function (data) {
-            console.log(data);
-            $('#tabDivForm').html(data);
+            console.log(data)
+            $('#tab_cat_problemas').empty();
+            $('#tab_cat_problemas').html(data);
         }
     });
 });
+
 // $("#id_problema").change(function () {
 //     var problemaId = $(this).val();
 //     $(document).ready(function () {

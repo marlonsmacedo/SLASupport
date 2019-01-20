@@ -1,10 +1,20 @@
-{% for cat_problema in cat_problemas %}
+<table>
+<thead>
+    <tr>
+        <th class="center">PROBLEMA</th>
+        <th class="center">TIPO</th>
+        <th class="center">SLA</th>
+        <th class="center">ORIGEM</th>
+    </tr>
+ </thead>
+<tbody>
+ {% for cat_problema in cat_problemas %}
 <tr>
     <td class="center">
-        <p>
-            <label for="id_categoria_problema_{{cat_problema.id}}">
-                <input name="group{{cat_problema.id}}" value="{{ cat_problema.desc_categoria_problema }}" type="radio" id="id_categoria_problema_{{cat_problema.id}}"/>
-                <span class="black-text">{{ cat_problema.problema__desc_problema|upper }}</span>
+        <p> 
+           <label for="id_categoria_problema_{{cat_problema.id}}">
+                 <input type="radio" name="categoria_problema" value="{{cat_problema.id}}" class="center" id="id_categoria_problema_{{cat_problema.id}}" required="">
+                    <span>{{cat_problema.desc_categoria_problema}}</span>
             </label>
         </p>
     </td>
@@ -13,7 +23,8 @@
     <td class="center">{{ cat_problema.origem|upper }}</td>
 </tr>
 {% endfor %}
-
+</tbody>
+</table>
 
 
 

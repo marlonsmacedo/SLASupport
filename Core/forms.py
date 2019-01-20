@@ -1,8 +1,8 @@
 # from django import forms
 # from .models import Chamado, Area, Problema
 # import json
-
-from django.forms import ModelForm, RadioSelect, Textarea
+from django.contrib.auth.models import User
+from django.forms import *
 from Core.models import Chamado, Problema, Area, Categoria_Problema
 from Core.widget import TableSelect
 
@@ -13,6 +13,7 @@ class ChamadoForm(ModelForm):
 
         model = Chamado
         fields = [
+            'criador',
             'area',
             'problema',
             'categoria_problema',
@@ -24,7 +25,7 @@ class ChamadoForm(ModelForm):
             'status_chamado'
         ]
         widgets = {
-            'categoria_problema': TableSelect(attrs={'class':'responsive-table center'}),
+            'categoria_problema': RadioSelect(attrs={'class': 'center'}),
             'desc_problema': Textarea(attrs={'class': 'materialize-textarea'}),
         }        
 
@@ -42,7 +43,7 @@ class ChamadoForm(ModelForm):
         elif self.instance.pk:
             self.fields['problema'].queryset = self.instance.area.problema_set.order_by('desc_problema')
 
-        self.fields['categoria_problema'].queryset = Categoria_Problema.objects.none()
+        self.fields['categoria_problema'].queryset = Categoria_Problema.objects.all()
 
         if 'problema' in self.data:
             try:
