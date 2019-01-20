@@ -1,0 +1,28 @@
+<table>
+    <thead>
+        <tr>
+            <th {% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>
+                PROBLEMA
+            </th>
+            <th {% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>
+                TIPO
+            </th>
+            <th {% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>
+                SLA
+            </th>
+            <th {% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>
+                ORIGEM
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+            {% with id=widget.attrs.id %}
+            <tr{% if id %} id="{{ id }}"{% endif %}{% if widget.attrs.class %} class="{{ widget.attrs.class }}"{% endif %}>
+                {% for group, options, index in widget.optgroups %}{% if group %}
+                     <tr>{{ group }}<td{% if id %} id="{{ id }}_{{ index }}"{% endif %}>{% endif %}{% for option in options %}
+                <td>{% include option.template_name with widget=option %}</td>{% endfor %}{% if group %}
+              </tr></td>{% endif %}{% endfor %}
+            </tr>{% endwith %}
+    </tbody>
+
+</table>

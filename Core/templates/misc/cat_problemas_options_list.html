@@ -1,28 +1,19 @@
-<table class="bordered" id="id_categoria_problema">
-    <thead>
-        <tr>
-            <th class="center">PROBLEMA</th>
-            <th class="center">TIPO</th>
-            <th class="center">SLA</th>
-            <th class="center">ORIGEM</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% for cat_problema in cat_problemas %}
-            <tr>
-                <td class="center">
-                    <p>
-                        <label>
-                            <input name="group{{cat_problema.id}}" type="radio" checked />
-                            <span class="black-text">{{ cat_problema.problema__desc_problema|upper }}</span>
-                        </label>
-                    </p>
-                </td>
-                <td class="center">{{ cat_problema.desc_categoria_problema|upper }}</td>
-                <td class="center">{{ cat_problema.sla|upper }}</td>
-                <td class="center">{{ cat_problema.origem|upper }}</td>
-            </tr>
-        {% endfor %}
-    </tbody>
-</table>
+{% for cat_problema in cat_problemas %}
+<tr>
+    <td class="center">
+        <p>
+            <label for="id_categoria_problema_{{cat_problema.id}}">
+                <input name="group{{cat_problema.id}}" value="{{ cat_problema.desc_categoria_problema }}" type="radio" id="id_categoria_problema_{{cat_problema.id}}"/>
+                <span class="black-text">{{ cat_problema.problema__desc_problema|upper }}</span>
+            </label>
+        </p>
+    </td>
+    <td class="center">{{ cat_problema.desc_categoria_problema|upper }}</td>
+    <td class="center">{{ cat_problema.sla|upper }}Hrs</td>
+    <td class="center">{{ cat_problema.origem|upper }}</td>
+</tr>
+{% endfor %}
+
+
+
 

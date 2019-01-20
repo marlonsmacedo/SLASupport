@@ -11,12 +11,11 @@
 from django.shortcuts import render
 from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.contrib.messages.views import SuccessMessageMixin
 from django.views.generic import ListView, CreateView, UpdateView
-from django.core import serializers
-from django.db.models import Sum
 from .models import Chamado, Area, Problema, Categoria_Problema
 from .forms import ChamadoForm
-import json
+
 
 
 class HomeListView(ListView):
@@ -26,18 +25,25 @@ class HomeListView(ListView):
     paginate_by = 5
 
 
-class ChamadoCreateView(CreateView):
+class ChamadoCreateView(SuccessMessageMixin, CreateView):
 
     model = Chamado
     form_class = ChamadoForm
     success_url = reverse_lazy('home')
+    success_message = "%(calculated_field)s was created successfully"
+    
+    def get_success_message(self, cleaned_data):
+        return self.success_message % dict(
+            cleaned_data,
+            calculated_field=self.object.calculated_field,
+        )
 
 
 class ChamadoUpdateView(UpdateView):
     model = Chamado
     form_class = ChamadoForm
     success_url = reverse_lazy('home')
-
+    success_message = "%(name)s was created successfully"
 
 def content_details(request):
 
@@ -59,14 +65,7 @@ def content_details(request):
                     'tipo_manutencao',
                     'origem'
                 )
-        print(cat_problemas)
         return render (request, 'misc/cat_problemas_options_list.html', {'cat_problemas' : cat_problemas} )
-
-    else:
-        area = Area.objects.all()
-        json_area_select = serializers.serialize('json', area)
-        return HttpResponse(json_area_select, content_type='application/json')
-
 
 # def teste_json(request):
 

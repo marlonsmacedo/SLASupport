@@ -50,7 +50,7 @@ class Status_Chamado(models.Model):
 class Chamado(models.Model):
 
     LOCAL_CHOICES = (
-        ('LOCAL', 'LOCAL'),
+        ('----------', '----------'),
         ('Àrea de Vendas', 'Àrea de Vendas'),
         ('CPD', 'CPD'),
         ('Tesouraria', 'Tesouraria'),
@@ -66,7 +66,7 @@ class Chamado(models.Model):
     )
 
     UNIDADES_CHOICES = (
-        ('UNIDADE', 'UNIDADE'),
+        ('----------', '----------'),
         ('Filial 01', 'Filial 01'),
         ('Filial 02', 'Filial 02'),
         ('Filial 03', 'Filial 03'),
@@ -93,7 +93,8 @@ class Chamado(models.Model):
     problema = models.ForeignKey("Problema", verbose_name="Problema", on_delete=models.CASCADE)
     categoria_problema = models.ForeignKey("Categoria_Problema", verbose_name="Categoria_problema", on_delete=models.CASCADE)
     criador = models.ForeignKey(User, verbose_name="Usuário", on_delete=models.CASCADE)
-    ramal = models.CharField(max_length=15, default="4392")
+    contato = models.CharField(max_length=30,blank=True)
+    ramal = models.CharField(max_length=15, blank=True)
     unidade = models.CharField(verbose_name="Unidade", max_length=100, choices=UNIDADES_CHOICES, default="UNIDADE")
     local = models.CharField(verbose_name="LOCAL", max_length=100, choices=LOCAL_CHOICES, default="LOCAL")
     dt_abertura = models.DateTimeField(auto_now_add=True)

@@ -2,8 +2,9 @@
 # from .models import Chamado, Area, Problema
 # import json
 
-from django.forms import ModelForm, RadioSelect
+from django.forms import ModelForm, RadioSelect, Textarea
 from Core.models import Chamado, Problema, Area, Categoria_Problema
+from Core.widget import TableSelect
 
 
 class ChamadoForm(ModelForm):
@@ -15,15 +16,16 @@ class ChamadoForm(ModelForm):
             'area',
             'problema',
             'categoria_problema',
-            'criador',
+            'contato',
             'ramal',
             'unidade',
-            'ramal',
+            'local',
             'desc_problema',
             'status_chamado'
         ]
         widgets = {
-            'categoria_problema': RadioSelect()
+            'categoria_problema': TableSelect(attrs={'class':'responsive-table center'}),
+            'desc_problema': Textarea(attrs={'class': 'materialize-textarea'}),
         }        
 
     def __init__(self, *args, **kwargs):
