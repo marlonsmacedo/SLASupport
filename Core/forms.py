@@ -7,7 +7,7 @@ from Core.models import Chamado, Problema, Area, Categoria_Problema
 from Core.widget import TableSelect
 
 
-class ChamadoForm(ModelForm):
+class ChamadoCreateForm(ModelForm):
 
     class Meta:
 
@@ -27,14 +27,16 @@ class ChamadoForm(ModelForm):
         widgets = {
             'categoria_problema': RadioSelect(attrs={'class': 'center'}),
             'desc_problema': Textarea(attrs={'class': 'materialize-textarea'}),
+             #Field ocultada, a mesma será inicializada na view sem visão ao usuário
             'criador': HiddenInput(),
         }
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.fields['problema'].queryset = Problema.objects.none()
-        if 'area' in self.data:
+        
+        self.fields['problema'].queryset = Problema.objects.none()        # Inicializa o Form vazio
+        if 'area' in self.data: 
             try:
                 area_id = int(self.data.get('area'))
                 self.fields['problema'].queryset = Problema.objects.filter(
@@ -44,7 +46,7 @@ class ChamadoForm(ModelForm):
         elif self.instance.pk:
             self.fields['problema'].queryset = self.instance.area.problema_set.order_by('desc_problema')
 
-        self.fields['categoria_problema'].queryset = Categoria_Problema.objects.all()
+        self.fields['categoria_problema'].queryset = Categoria_Problema.objects.none() # Inicializa o Form vazio
 
         if 'problema' in self.data:
             try:
@@ -54,3 +56,15 @@ class ChamadoForm(ModelForm):
                 pass  # invalid input from the client; ignore and fallback to empty City queryset
         elif self.instance.pk:
             self.fields['categoria_problema'].queryset = self.instance.problema.categoria_problema_set.order_by('desc_categoria_problema')
+
+class ChamadoUpdateForm(ModelForm):
+    
+    class Meta:
+        model = Chamado
+        fields = '__all__'
+
+class ChamadoCloseForm(ModelForm):
+    
+    class Meta:
+        model = Chamado
+        fields = '__all__'

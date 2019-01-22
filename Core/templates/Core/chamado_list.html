@@ -9,20 +9,23 @@
 {% endblock jshead %}
 
 {% block content %}
-
+<div id="messages">
 {% if messages %}
     <ul class="messages">
         {% for message in messages %}
         <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>
             {% if message.level == DEFAULT_MESSAGE_LEVELS.ERROR %}Important: {% endif %}
-            <a onload="M.toast({html: '{{ message }}'})"></a>
-            {{ message }}
+              <script>
+                  document.addEventListener("DOMContentLoaded", function(event) {
+                      M.toast({html: '{{message}}', displayLength: 7000})
+                  });
+              </script>
         </li>
         {% endfor %}
     </ul>
 {% endif %}
 
-<h6 class="center"> {{ object_list | length }} Ocorrências em aberto em {% now "SHORT_DATE_FORMAT" %}
+<h6 class="center"> Existem {{ page_obj.paginator.count }} ocorrências em aberto em {% now "SHORT_DATE_FORMAT" %}
 </h6>
 
 <div class="row container">
@@ -38,7 +41,7 @@
           <th class="center">PROBLEMA</br>TIPO</th>
           <th class="center">UNIDADE - LOCAL<br>DESCRIÇÃO</th>
           <th class="center">SLA</th>
-          <th class="center"><span style="padding: 30s%">AÇÃO</span></th>
+          <th class="center"><span style="padding: 30%">AÇÃO</span></th>
           <th></th>
           <th></th>
 
@@ -65,7 +68,7 @@
             <i class="material-icons yellow-text text-accent-5">check_circle</i><br>
             {% now "d-m-Y H:i:s" %}
           </td>
-          <td><a href="{% url 'chamado_change' pk=chamados.id %}" class="blue-grey-text text-darken-3">
+          <td><a href="{% url 'change' pk=chamados.id %}" class="blue-grey-text text-darken-3">
                 <i class="material-icons tooltipped"  data-tooltip="Editar Ocorrência Nº{{chamados.id}}" >edit</i>
               </a>
           </td>
@@ -107,7 +110,7 @@
 
 <!--  Inicio Float Button Add Chamado  -->
 <div class="fixed-action-btn">
-  <a href="{% url 'chamado_add' %}" class="btn-floating btn-large red pulse">
+  <a href="{% url 'create' %}" class="btn-floating btn-large red pulse">
     <i class="large material-icons tooltipped" data-position="left" data-tooltip="Criar Nova Ocorrência">add</i>
   </a>
 </div>
