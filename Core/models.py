@@ -107,14 +107,17 @@ class Chamado(models.Model):
     status_chamado = models.ForeignKey("status_chamado", verbose_name="Status", on_delete=models.CASCADE)
 
 
+
     def sla_time(self):
                 
         """ Tempo em Dias, Horas, Minutos e Segundo (dt_abertura - datetime atual)"""
         return str(datetime.now(timezone.utc) - self.dt_abertura).split('.')[0]
 
+
     class Meta:
         verbose_name = "Chamado"
         verbose_name_plural = "Chamados"
+
 
     def __str__(self):
         return str(self.id)

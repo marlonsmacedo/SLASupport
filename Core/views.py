@@ -18,20 +18,6 @@ class ChamadoListView(LoginRequiredMixin, ListView):
     login_url = 'acesso/login/'
     redirect_field_name = 'redirect_to'
 
-#    def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-
-#         #Indicador para informar quanto tempo o SLA está em Próximo do Limite
-#         green = '<i class="material-icons gree-text text-accent-5">check_circle</i><br>'
-#         yellow = '<i class="material-icons yellow-text text-accent-5">check_circle</i><br>'
-#         red = '<i class="material-icons yellow-text text-accent-5">check_circle</i><br>'
-
-#         time = Chamado.sla_time
-
-
-#         context['now'] = timezone.now()
-#         return context
-
 
 class ChamadoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
 
