@@ -1,9 +1,10 @@
 from django.urls import path
 #from Core.views import home_cards, home, consultar, encerrar, editar
 from Core.views import (
-HomeListView,
+ChamadoListView,
 ChamadoCreateView,
 ChamadoUpdateView,
+ChamadoDetailView,
 content_details,
 
 )
@@ -12,9 +13,10 @@ content_details,
 # teste usando genericViews
 
 urlpatterns = [
-    path('', HomeListView.as_view(), name='home'),
-    path('add/', ChamadoCreateView.as_view(), name='chamado_add'),
-    path('<int:pk>/update/', ChamadoUpdateView.as_view(), name='chamado_change'),
+    path('', ChamadoListView.as_view(), name='home'),
+    path('add/', ChamadoCreateView.as_view(), name='create'),
+    path('<int:pk>/update/', ChamadoUpdateView.as_view(), name='change'),
+    path('<int:pk>/detail/', ChamadoDetailView.as_view(), name='detail'),
     path('content_details/', content_details, name='ajax_content_details'),
     
 

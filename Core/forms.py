@@ -12,18 +12,7 @@ class ChamadoCreateForm(ModelForm):
     class Meta:
 
         model = Chamado
-        fields = [
-            'criador',
-            'area',
-            'problema',
-            'categoria_problema',
-            'contato',
-            'ramal',
-            'unidade',
-            'local',
-            'desc_problema',
-            'status_chamado'
-        ]
+        fields = '__all__'
         widgets = {
             'categoria_problema': RadioSelect(attrs={'class': 'center'}),
             'desc_problema': Textarea(attrs={'class': 'materialize-textarea'}),
@@ -62,8 +51,20 @@ class ChamadoUpdateForm(ModelForm):
     class Meta:
         model = Chamado
         fields = '__all__'
+        widgets = {
+            'categoria_problema': RadioSelect(attrs={'class': 'center'}),
+            'desc_problema': Textarea(attrs={'class': 'materialize-textarea'}),
+             #Field ocultada, a mesma será inicializada na view sem visão ao usuário
+            'criador': HiddenInput(),
+        }
 
 class ChamadoCloseForm(ModelForm):
+    
+    class Meta:
+        model = Chamado
+        fields = '__all__'
+
+class ChamadoDetailForm(ModelForm):
     
     class Meta:
         model = Chamado
