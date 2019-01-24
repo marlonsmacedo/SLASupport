@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
+from datetime import datetime, timezone
 
 
 class Area(models.Model):
@@ -104,6 +105,12 @@ class Chamado(models.Model):
     desc_solucao = models.TextField(verbose_name="Descricão Solução", blank=True, default="Por favor descreva a Solução do Problema.")
     desc_sla_justificativa = models.TextField(verbose_name="Descricão Estouro SLA", blank=True, default="Por favor descreva a Justificativa para o estouro do SLA.")
     status_chamado = models.ForeignKey("status_chamado", verbose_name="Status", on_delete=models.CASCADE)
+
+
+    def sla_time(self):
+                
+        """ Tempo em Dias, Horas, Minutos e Segundo (dt_abertura - datetime atual)"""
+        return str(datetime.now(timezone.utc) - self.dt_abertura).split('.')[0]
 
     class Meta:
         verbose_name = "Chamado"
