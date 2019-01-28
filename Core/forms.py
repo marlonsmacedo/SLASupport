@@ -58,14 +58,15 @@ class ChamadoUpdateForm(ModelForm):
             'criador': HiddenInput(),
         }
 
+class ChamadoDetailForm(ModelForm):
+    
+    class Meta:
+        model = Chamado
+        fields = '__all__'
+
 class ChamadoCloseForm(ModelForm):
     
     class Meta:
         model = Chamado
         fields = '__all__'
 
-class ChamadoDetailForm(ModelForm):
-    
-    class Meta:
-        model = Chamado
-        fields = '__all__'

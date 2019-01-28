@@ -50,10 +50,9 @@
               <th class="center">PROBLEMA</br>TIPO</th>
               <th class="center">UNIDADE - LOCAL<br>DESCRIÇÃO</th>
               <th class="center">SLA</th>
-              <th class="center"><span style="padding: 30%">AÇÃO</span></th>
-              <th></th>
-              <th></th>
-
+              <th class="center acao">AÇÃO</th>
+              
+              
             </tr>
           </thead>
           <tbody>
@@ -74,17 +73,24 @@
                 </div>
               </td>
               <td class="center fix-width">
-                <i class="material-icons yellow-text text-accent-5">check_circle</i><br>
-                {{ chamados.sla_time }}
+                {{ chamados.status_sla_flag|safe }}
+                <br>
+                {{ chamados.tempo_duracao_chamado }}
               </td>
-              <td><a href="{% url 'change' pk=chamados.id %}" class="blue-grey-text text-darken-3">
-                  <i class="material-icons tooltipped" data-tooltip="Editar Ocorrência Nº{{chamados.id}}">edit</i>
-                </a>
+              <td>
+                  <a href="{% url 'detail' pk=chamados.id %}" class="blue-grey-text text-darken-3 acao-icons">
+                    <i class="material-icons tooltipped" data-tooltip="Visualizar Detelhes">search</i>
+                  </a> 
+              </td>
+              <td>              
+                  <a href="{% url 'change' pk=chamados.id %}" class="blue-grey-text text-darken-3">
+                      <i class="material-icons tooltipped" data-tooltip="Editar Ocorrência">edit</i>
+                  </a>   
               </td>
               <td>
                 <a href="#" class="blue-grey-text text-darken-3">
-                  <i class="material-icons tooltipped" data-tooltip="Encerrar Ocorrência Nº{{chamados.id}}">delete</i>
-                </a>
+                  <i class="material-icons tooltipped" data-tooltip="Encerrar Ocorrência">delete</i>
+                </a>  
               </td>
             </tr>
             {% endfor %}

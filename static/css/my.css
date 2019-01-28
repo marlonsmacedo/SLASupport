@@ -202,3 +202,11 @@ nav .brand-logo {
   .input-field .prefix.active {
     color: #000;
   }
+
+ .acao {
+   padding-left: 3%;
+ }
+
+ .acao-icons {
+  padding-left: 33%;
+}

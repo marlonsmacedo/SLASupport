@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from django.db import models
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 
 
 class Area(models.Model):
@@ -108,11 +108,27 @@ class Chamado(models.Model):
 
 
 
-    def sla_time(self):
+    def tempo_duracao_chamado(self):
                 
         """ Tempo em Dias, Horas, Minutos e Segundo (dt_abertura - datetime atual)"""
-        return str(datetime.now(timezone.utc) - self.dt_abertura).split('.')[0]
 
+        return datetime.now(timezone.utc) - self.dt_abertura
+    
+    def status_sla_flag(self):
+
+        
+        if self.tempo_duracao_chamado() <= (timedelta(hours=self.categoria_problema.sla, minutes=0, seconds=0)/2):
+
+            status_sla_flag = '<i class="material-icons green-text">check_circle</i>'
+        
+        elif self.tempo_duracao_chamado() < (timedelta(hours=self.categoria_problema.sla, minutes=0, seconds=0)):
+            
+            status_sla_flag = '<i class="material-icons yellow-text">check_circle</i>'
+        
+        else:
+            status_sla_flag = '<i class="material-icons red-text">check_circle</i>'
+
+        return status_sla_flag
 
     class Meta:
         verbose_name = "Chamado"
@@ -121,3 +137,4 @@ class Chamado(models.Model):
 
     def __str__(self):
         return str(self.id)
+     

@@ -1,22 +1,25 @@
-from django.shortcuts import render
-from django.urls import reverse_lazy
-from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth.decorators import login_required
-from django.contrib.messages.views import SuccessMessageMixin
-from django.views.generic import ListView, CreateView, UpdateView, DetailView
-from .models import Chamado, Area, Problema, Categoria_Problema
-from .forms import ChamadoCreateForm, ChamadoDetailForm, ChamadoUpdateForm
 from datetime import datetime, timezone
 
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.messages.views import SuccessMessageMixin
+from django.shortcuts import render
+from django.urls import reverse_lazy
+from django.views.generic import CreateView, DetailView, ListView, UpdateView
+
+from .forms import ChamadoCreateForm, ChamadoDetailForm, ChamadoUpdateForm
+from .models import Area, Categoria_Problema, Chamado, Problema
 
 
 class ChamadoListView(LoginRequiredMixin, ListView):
 
     model = Chamado
+    ordering = '-id'
     context_object_name = 'chamado'
-    paginate_by = 5
+    paginate_by = 4
     login_url = 'acesso/login/'
     redirect_field_name = 'redirect_to'
+
 
 
 class ChamadoCreateView(LoginRequiredMixin, SuccessMessageMixin, CreateView):
@@ -45,11 +48,45 @@ class ChamadoUpdateView(LoginRequiredMixin, SuccessMessageMixin, UpdateView):
     redirect_field_name = 'redirect_to'
 
 
-class ChamadoDetailView(DetailView):
+class ChamadoDetailView(LoginRequiredMixin, DetailView):
     model = Chamado
     template_name_suffix = '_detail_form'
     form_class = ChamadoDetailForm
+    login_url = 'acesso/login/'
+    redirect_field_name = 'redirect_to'
 
+    def get_object(self, queryset=None):
+        """
+        Return the object the view is displaying.
+        Require `self.queryset` and a `pk` or `slug` argument in the URLconf.
+        Subclasses can override this to return any object.
+        """
+        # Use a custom queryset if provided; this is required for subclasses
+        # like DateDetailView
+        if queryset is None:
+            queryset = self.get_queryset()
+        # Next, try looking up by primary key.
+        pk = self.kwargs.get(self.pk_url_kwarg)
+        slug = self.kwargs.get(self.slug_url_kwarg)
+        if pk is not None:
+            queryset = queryset.filter(pk=pk)
+        # Next, try looking up by slug.
+        if slug is not None and (pk is None or self.query_pk_and_slug):
+            slug_field = self.get_slug_field()
+            queryset = queryset.filter(**{slug_field: slug})
+        # If none of those are defined, it's an error.
+        if pk is None and slug is None:
+            raise AttributeError(
+                "Generic detail view %s must be called with either an object "
+                "pk or a slug in the URLconf." % self.__class__.__name__
+            )
+        try:
+            # Get the single item from the filtered queryset
+            obj = queryset.get()
+        except queryset.model.DoesNotExist:
+            raise Http404(_("No %(verbose_name)s found matching the query") %
+                        {'verbose_name': queryset.model._meta.verbose_name})
+        return obj
 
 @login_required
 def content_details(request):
